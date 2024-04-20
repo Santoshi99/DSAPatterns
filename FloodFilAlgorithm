@@ -1,0 +1,46 @@
+/// Find All Groups of Farmland
+
+class Solution {
+    public int[][] findFarmland(int[][] land) {
+        List<int[]> farmLands = new ArrayList<>();
+        
+         for(int i = 0;i<land.length;i++){
+            List<Integer> farmArea = new ArrayList<>();
+            for(int j = 0;j<land[0].length;j++){
+                 if(land[i][j]==1) {
+                    int[] endBox = findFarmLandCorner(i,j,land);
+                    farmLands.add(new int[]{i,j,endBox[0],endBox[1]});
+                    }
+            }
+           
+         }
+         int[][] farms = new int[farmLands.size()][4];
+         for(int i = 0;i<farms.length;i++) farms[i] = farmLands.get(i);
+         return farms;
+    }
+  public int[] findFarmLandCorner(int i , int j, int[][] land){
+    Queue<int[]> que = new LinkedList<>();
+    que.add(new int[]{i,j});
+    land[i][j]=0;
+    int[] endBox = new int[]{-1,-1};
+    while(!que.isEmpty()){   int size = que.size();
+        for(int k = 0; k<size;k++){
+            int[] cur = que.poll();
+            
+            if(cur[0]+1>=0&&cur[0]+1<land.length&&land[cur[0]+1][cur[1]]!=0) {
+                que.add(new int[]{cur[0]+1,cur[1]});
+                land[cur[0]+1][cur[1]] = 0;
+                endBox[0] = cur[0]+1;
+                endBox[1] = cur[1];
+            }  if(cur[1]+1>=0&&cur[1]+1<land[0].length&&land[cur[0]][cur[1]+1]!=0) {
+                que.add(new int[]{cur[0],cur[1]+1});
+                land[cur[0]][cur[1]+1] = 0;
+                endBox[0] = cur[0];
+                endBox[1] = cur[1]+1;
+            } 
+        }
+    }
+    if(endBox[0]==-1) return new int[]{i,j};
+    return endBox;
+   }
+}
